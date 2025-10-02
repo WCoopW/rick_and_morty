@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:tarkov_mobile/src/core/network/exceptions/network_exceptions.dart';
 
-/// Фабрика для создания сетевых исключений из DioException
+/// Factory for creating network exceptions from DioException
 class NetworkExceptionFactory {
   const NetworkExceptionFactory._();
 
-  /// Создает соответствующее исключение на основе DioException
+  /// Creates the corresponding exception based on DioException
   static NetworkException fromDioException(DioException exception) {
     switch (exception.type) {
       case DioExceptionType.connectionTimeout:
@@ -60,12 +60,11 @@ class NetworkExceptionFactory {
     }
   }
 
-  /// Обрабатывает ошибки с ответом сервера
   static NetworkException _handleBadResponse(DioException exception) {
     final statusCode = exception.response?.statusCode;
     final data = exception.response?.data;
 
-    // Обработка ошибок аутентификации
+    // Handling authentication errors
     if (statusCode == 401 || statusCode == 403) {
       return AuthenticationException(
         message: _extractErrorMessage(data) ?? 'Ошибка аутентификации',
@@ -76,7 +75,7 @@ class NetworkExceptionFactory {
       );
     }
 
-    // Обработка ошибок валидации
+    // Handling validation errors
     if (statusCode == 400 || statusCode == 422) {
       final validationErrors = _extractValidationErrors(data);
       return ValidationException(
@@ -89,7 +88,7 @@ class NetworkExceptionFactory {
       );
     }
 
-    // Ошибки сервера
+    // Server errors
     if (statusCode != null && statusCode >= 500) {
       return ServerException(
         message: _extractErrorMessage(data) ?? 'Внутренняя ошибка сервера',
@@ -100,7 +99,7 @@ class NetworkExceptionFactory {
       );
     }
 
-    // Ошибки клиента
+    // Client errors
     if (statusCode != null && statusCode >= 400) {
       return ClientException(
         message: _extractErrorMessage(data) ?? 'Ошибка запроса',
@@ -111,7 +110,7 @@ class NetworkExceptionFactory {
       );
     }
 
-    // Неизвестная ошибка с ответом
+    // Unknown error with response
     return UnknownNetworkException(
       message: _extractErrorMessage(data) ?? 'Неизвестная ошибка',
       statusCode: statusCode,
@@ -121,70 +120,56 @@ class NetworkExceptionFactory {
     );
   }
 
-  /// Извлекает сообщение об ошибке из ответа сервера
-  /// Возвращает null если не удалось извлечь сообщение (например, HTML код)
-  /// В этом случае будут использованы кастомные сообщения об ошибках
+  /// Extracts the error message from the server response
+  /// Returns null if the message cannot be extracted (for example, HTML code)
+  /// In this case, custom error messages will be used
   static String? _extractErrorMessage(dynamic data) {
     if (data == null) return null;
 
-    // Проверяем, что это не HTML код
     if (data is String) {
-      // Если это строка, проверяем, не HTML ли это
       if (data.contains('<html') ||
           data.contains('<!DOCTYPE') ||
           data.contains('<body')) {
-        return null; // Не извлекаем сообщения из HTML
+        return null; 
       }
-      // Если это обычная строка (не HTML), возвращаем её
       if (data.isNotEmpty) return data;
       return null;
     }
 
-    // Обрабатываем только Map (JSON объекты)
     if (data is Map<String, dynamic>) {
-      // 1. Стандартный формат ошибки - поле 'message'
       if (data.containsKey('message')) {
         return data['message']?.toString();
       }
 
-      // 2. Поле 'detail' (часто используется в DRF и других фреймворках)
       if (data.containsKey('detail')) {
         return data['detail']?.toString();
       }
 
-      // 3. Поле 'error' - может быть строкой или объектом
       if (data.containsKey('error')) {
         final error = data['error'];
         if (error is String) return error;
 
-        // Если error - это объект с полем message
         if (error is Map<String, dynamic> && error.containsKey('message')) {
           return error['message']?.toString();
         }
 
-        // Если error - это объект с полем detail
         if (error is Map<String, dynamic> && error.containsKey('detail')) {
           return error['detail']?.toString();
         }
 
-        // Если error - это объект, но не знаем структуру, возвращаем как строку
         if (error is Map<String, dynamic>) {
           return error.toString();
         }
       }
 
-      // 4. Для ошибок валидации
       if (data.containsKey('errors')) {
         return 'Ошибка валидации данных';
       }
     }
 
-    // Если ничего не удалось извлечь, возвращаем null
-    // Это приведет к использованию кастомных сообщений об ошибках
     return null;
   }
 
-  /// Извлекает ошибки валидации из ответа сервера
   static Map<String, List<String>>? _extractValidationErrors(dynamic data) {
     if (data == null || data is! Map<String, dynamic>) return null;
 
@@ -203,7 +188,6 @@ class NetworkExceptionFactory {
     return result.isEmpty ? null : result;
   }
 
-  /// Получает сообщение для ошибок таймаута
   static String _getTimeoutMessage(DioExceptionType type) {
     switch (type) {
       case DioExceptionType.connectionTimeout:

@@ -2,11 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:tarkov_mobile/src/core/network/exceptions/network_exceptions.dart';
 import 'package:tarkov_mobile/src/core/network/utils/error_handler.dart';
 
-/// Базовый класс для всех datasource с грамотной обработкой ошибок
 abstract class BaseDataSource {
   const BaseDataSource();
 
-  /// Обрабатывает сетевые запросы с автоматической обработкой ошибок
   Future<T> handleNetworkRequest<T>({
     required Future<T> Function() request,
     required String context,
@@ -28,44 +26,36 @@ abstract class BaseDataSource {
     }
   }
 
-  /// Проверяет успешность HTTP ответа
   bool isSuccessfulResponse(Response response) {
     return response.statusCode != null &&
         response.statusCode! >= 200 &&
         response.statusCode! < 300;
   }
 
-  /// Проверяет, является ли статус код успешным
   bool isSuccessfulStatusCode(int statusCode) {
     return statusCode >= 200 && statusCode < 300;
   }
 
-  /// Проверяет, является ли статус код "уже существует" (208)
   bool isAlreadyExistsStatusCode(int statusCode) {
     return statusCode == 208;
   }
 
-  /// Проверяет, является ли статус код "создано" (201)
   bool isCreatedStatusCode(int statusCode) {
     return statusCode == 201;
   }
 
-  /// Проверяет, является ли статус код "OK" (200)
   bool isOkStatusCode(int statusCode) {
     return statusCode == 200;
   }
 
-  /// Получает пользовательское сообщение об ошибке
   String getUserFriendlyErrorMessage(NetworkException exception) {
     return NetworkErrorHandler.getUserFriendlyMessage(exception);
   }
 
-  /// Проверяет, является ли ошибка критичной
   bool isCriticalError(NetworkException exception) {
     return NetworkErrorHandler.isCriticalError(exception);
   }
 
-  /// Обрабатывает POST запросы с автоматической валидацией ответа
   Future<bool> handlePostRequest({
     required Future<Response> Function() request,
     required String context,
@@ -82,7 +72,6 @@ abstract class BaseDataSource {
     );
   }
 
-  /// Обрабатывает GET запросы с автоматической валидацией ответа
   Future<T> handleGetRequest<T>({
     required Future<Response> Function() request,
     required T Function(dynamic data) parser,
@@ -99,7 +88,6 @@ abstract class BaseDataSource {
     );
   }
 
-  /// Валидирует HTTP ответ
   bool _validateResponse(Response response, List<int>? successStatusCodes,
       [List<int>? additionalSuccessCodes]) {
     final statusCode = response.statusCode;
@@ -119,14 +107,12 @@ abstract class BaseDataSource {
       return true;
     }
 
-    // Если статус код не успешный, создаем соответствующее исключение
     throw ClientException(
       message: 'Неожиданный статус код: $statusCode',
       statusCode: statusCode,
     );
   }
 
-  /// Парсит ответ сервера
   T _parseResponse<T>(
     dynamic data,
     T Function(dynamic data) parser,

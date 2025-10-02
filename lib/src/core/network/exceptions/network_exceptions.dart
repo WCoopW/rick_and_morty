@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-/// Базовый класс для всех сетевых исключений
+/// Base class for all network exceptions
 abstract class NetworkException implements Exception {
   const NetworkException({
     required this.message,
@@ -10,26 +10,20 @@ abstract class NetworkException implements Exception {
     this.responseData,
   });
 
-  /// Сообщение об ошибке
   final String message;
 
-  /// HTTP статус код (если есть)
   final int? statusCode;
 
-  /// Причина ошибки
   final Object? cause;
 
-  /// Опции запроса Dio
   final RequestOptions? requestOptions;
 
-  /// Данные ответа сервера (если есть)
   final dynamic responseData;
 
   @override
   String toString() => 'NetworkException: $message';
 }
 
-/// Ошибка подключения к сети
 class ConnectionException extends NetworkException {
   const ConnectionException({
     required super.message,
@@ -43,7 +37,6 @@ class ConnectionException extends NetworkException {
   String toString() => 'ConnectionException: $message';
 }
 
-/// Ошибка таймаута
 class TimeoutException extends NetworkException {
   const TimeoutException({
     required super.message,
@@ -57,7 +50,6 @@ class TimeoutException extends NetworkException {
   String toString() => 'TimeoutException: $message';
 }
 
-/// Ошибка сервера (5xx)
 class ServerException extends NetworkException {
   const ServerException({
     required super.message,
@@ -71,7 +63,6 @@ class ServerException extends NetworkException {
   String toString() => 'ServerException: $message (Status: $statusCode)';
 }
 
-/// Ошибка клиента (4xx)
 class ClientException extends NetworkException {
   const ClientException({
     required super.message,
@@ -85,7 +76,6 @@ class ClientException extends NetworkException {
   String toString() => 'ClientException: $message (Status: $statusCode)';
 }
 
-/// Ошибка аутентификации (401, 403)
 class AuthenticationException extends NetworkException {
   const AuthenticationException({
     required super.message,
@@ -100,7 +90,6 @@ class AuthenticationException extends NetworkException {
       'AuthenticationException: $message (Status: $statusCode)';
 }
 
-/// Ошибка валидации данных
 class ValidationException extends NetworkException {
   const ValidationException({
     required super.message,
@@ -111,14 +100,12 @@ class ValidationException extends NetworkException {
     this.validationErrors,
   });
 
-  /// Детали ошибок валидации
   final Map<String, List<String>>? validationErrors;
 
   @override
   String toString() => 'ValidationException: $message';
 }
 
-/// Ошибка парсинга ответа
 class ParseException extends NetworkException {
   const ParseException({
     required super.message,
@@ -132,7 +119,6 @@ class ParseException extends NetworkException {
   String toString() => 'ParseException: $message';
 }
 
-/// Неизвестная ошибка
 class UnknownNetworkException extends NetworkException {
   const UnknownNetworkException({
     required super.message,

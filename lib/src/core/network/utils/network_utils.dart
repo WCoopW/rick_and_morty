@@ -2,11 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:tarkov_mobile/src/core/network/exceptions/exception_factory.dart';
 import 'package:tarkov_mobile/src/core/network/exceptions/network_exceptions.dart';
 
-/// Утилиты для работы с сетью
 class NetworkUtils {
   const NetworkUtils._();
 
-  /// Безопасно выполняет сетевой запрос с автоматической обработкой ошибок
   static Future<T> safeRequest<T>({
     required Future<T> Function() request,
     T? Function(DioException)? onError,
@@ -18,30 +16,25 @@ class NetworkUtils {
     } on DioException catch (e) {
       final networkException = NetworkExceptionFactory.fromDioException(e);
 
-      // Пользовательская обработка DioException
       if (onError != null) {
         final result = onError(e);
         if (result != null) return result;
       }
 
-      // Пользовательская обработка NetworkException
       if (onNetworkError != null) {
         final result = onNetworkError(networkException);
         if (result != null) return result;
       }
 
-      // По умолчанию пробрасываем NetworkException
       throw networkException;
     } on NetworkException {
       rethrow;
     } catch (e) {
-      // Пользовательская обработка неизвестных ошибок
       if (onUnknownError != null) {
         final result = onUnknownError(e);
         if (result != null) return result;
       }
 
-      // По умолчанию пробрасываем как UnknownNetworkException
       throw UnknownNetworkException(
         message: 'Неизвестная ошибка: ${e.toString()}',
         cause: e,
@@ -49,12 +42,10 @@ class NetworkUtils {
     }
   }
 
-  /// Проверяет, является ли ошибка ошибкой сети
   static bool isNetworkError(Object error) {
     return error is NetworkException || error is DioException;
   }
 
-  /// Проверяет, является ли ошибка ошибкой аутентификации
   static bool isAuthenticationError(Object error) {
     if (error is AuthenticationException) return true;
     if (error is DioException) {
@@ -64,7 +55,6 @@ class NetworkUtils {
     return false;
   }
 
-  /// Проверяет, является ли ошибка ошибкой валидации
   static bool isValidationError(Object error) {
     if (error is ValidationException) return true;
     if (error is DioException) {
@@ -74,7 +64,6 @@ class NetworkUtils {
     return false;
   }
 
-  /// Проверяет, является ли ошибка ошибкой сервера
   static bool isServerError(Object error) {
     if (error is ServerException) return true;
     if (error is DioException) {
@@ -84,7 +73,6 @@ class NetworkUtils {
     return false;
   }
 
-  /// Проверяет, является ли ошибка ошибкой таймаута
   static bool isTimeoutError(Object error) {
     if (error is TimeoutException) return true;
     if (error is DioException) {
@@ -95,7 +83,6 @@ class NetworkUtils {
     return false;
   }
 
-  /// Получает понятное сообщение об ошибке для пользователя
   static String getUserFriendlyMessage(Object error) {
     if (error is NetworkException) {
       return error.message;
@@ -109,7 +96,6 @@ class NetworkUtils {
     return 'Произошла неизвестная ошибка';
   }
 
-  /// Логирует ошибку с дополнительной информацией
   static void logError(Object error, {String? context}) {
     final contextStr = context != null ? '[$context] ' : '';
 
