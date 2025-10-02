@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:tarkov_mobile/src/core/network/exceptions/network_exceptions.dart';
 import 'package:tarkov_mobile/src/core/network/utils/error_handler.dart';
 
-/// Утилита для отображения сетевых ошибок в UI
+/// Utility for displaying network errors in UI
 class NetworkErrorDisplay {
   const NetworkErrorDisplay._();
 
-  /// Показывает ошибку в snackbar с автоматическим определением типа
+  /// Shows an error in a snackbar with automatic type detection
   static void showErrorSnackBar(
     BuildContext context,
     NetworkException exception, {
@@ -33,7 +33,7 @@ class NetworkErrorDisplay {
     );
   }
 
-  /// Показывает ошибку в snackbar по сообщению
+  /// Shows an error in a snackbar by message
   static void showErrorSnackBarByMessage(
     BuildContext context,
     String message, {
@@ -58,7 +58,7 @@ class NetworkErrorDisplay {
     );
   }
 
-  /// Показывает предупреждение в snackbar
+  /// Shows a warning in a snackbar
   static void showWarningSnackBar(
     BuildContext context,
     String message, {
@@ -82,7 +82,7 @@ class NetworkErrorDisplay {
     );
   }
 
-  /// Показывает успешное сообщение в snackbar
+  /// Shows a success message in a snackbar
   static void showSuccessSnackBar(
     BuildContext context,
     String message, {
@@ -106,7 +106,7 @@ class NetworkErrorDisplay {
     );
   }
 
-  /// Получает цвет для типа ошибки
+  /// Gets the color for the error type
   static Color _getErrorColor(NetworkException exception) {
     switch (exception.runtimeType) {
       case ConnectionException:
@@ -127,7 +127,7 @@ class NetworkErrorDisplay {
     }
   }
 
-  /// Показывает диалог с детальной информацией об ошибке
+  /// Shows a dialog with detailed information about the error
   static void showErrorDialog(
     BuildContext context,
     NetworkException exception, {
