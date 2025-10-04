@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:tarkov_mobile/src/core/network/exceptions/exception_factory.dart';
-import 'package:tarkov_mobile/src/core/network/exceptions/network_exceptions.dart';
+import 'package:rick_and_morty/src/core/network/exceptions/exception_factory.dart';
+import 'package:rick_and_morty/src/core/network/exceptions/network_exceptions.dart';
 
 class NetworkUtils {
   const NetworkUtils._();
@@ -49,8 +49,7 @@ class NetworkUtils {
   static bool isAuthenticationError(Object error) {
     if (error is AuthenticationException) return true;
     if (error is DioException) {
-      return error.response?.statusCode == 401 ||
-          error.response?.statusCode == 403;
+      return error.response?.statusCode == 401 || error.response?.statusCode == 403;
     }
     return false;
   }
@@ -58,8 +57,7 @@ class NetworkUtils {
   static bool isValidationError(Object error) {
     if (error is ValidationException) return true;
     if (error is DioException) {
-      return error.response?.statusCode == 400 ||
-          error.response?.statusCode == 422;
+      return error.response?.statusCode == 400 || error.response?.statusCode == 422;
     }
     return false;
   }

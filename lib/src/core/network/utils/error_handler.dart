@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:tarkov_mobile/src/core/network/exceptions/exception_factory.dart';
-import 'package:tarkov_mobile/src/core/network/exceptions/network_exceptions.dart';
+import 'package:rick_and_morty/src/core/network/exceptions/exception_factory.dart';
+import 'package:rick_and_morty/src/core/network/exceptions/network_exceptions.dart';
 
 /// Утилита для обработки сетевых ошибок
 class NetworkErrorHandler {
@@ -12,8 +12,7 @@ class NetworkErrorHandler {
   }
 
   /// Обрабатывает любую ошибку и возвращает NetworkException
-  static NetworkException handleException(Object exception,
-      [StackTrace? stackTrace]) {
+  static NetworkException handleException(Object exception, [StackTrace? stackTrace]) {
     if (exception is DioException) {
       return handleDioException(exception);
     }
@@ -31,8 +30,7 @@ class NetworkErrorHandler {
 
   /// Проверяет, является ли ошибка критичной для отображения пользователю
   static bool isCriticalError(NetworkException exception) {
-    return exception is! ValidationException &&
-        exception is! AuthenticationException;
+    return exception is! ValidationException && exception is! AuthenticationException;
   }
 
   /// Получает пользовательское сообщение об ошибке
@@ -76,9 +74,7 @@ class NetworkErrorHandler {
     // Проверяем, что это не HTML код
     if (data is String) {
       // Если это строка, проверяем, не HTML ли это
-      if (data.contains('<html') ||
-          data.contains('<!DOCTYPE') ||
-          data.contains('<body')) {
+      if (data.contains('<html') || data.contains('<!DOCTYPE') || data.contains('<body')) {
         return null; // Не извлекаем сообщения из HTML
       }
       // Если это обычная строка (не HTML), возвращаем её

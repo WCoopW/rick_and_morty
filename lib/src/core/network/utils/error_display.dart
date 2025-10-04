@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tarkov_mobile/src/core/network/exceptions/network_exceptions.dart';
-import 'package:tarkov_mobile/src/core/network/utils/error_handler.dart';
+import 'package:rick_and_morty/src/core/network/exceptions/network_exceptions.dart';
+import 'package:rick_and_morty/src/core/network/utils/error_handler.dart';
 
 /// Utility for displaying network errors in UI
 class NetworkErrorDisplay {

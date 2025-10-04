@@ -1,20 +1,21 @@
-import 'package:tarkov_mobile/src/core/rest_client/src/http/endpoints/endpoints.dart';
+import 'package:rick_and_morty/src/core/network/rest_client/src/http/endpoints/endpoints.dart';
 
-class RickAndMortyEndpoints extends Endpoints {
+class RickAndMortyEndpoint extends Endpoints {
 /* -------------------------------------------------------------------------- */
   final String _characters;
 /* -------------------------------------------------------------------------- */
-  RickAndMortyEndpoints({
+  final String _location;
+/* -------------------------------------------------------------------------- */
+  RickAndMortyEndpoint({
     required super.baseUrl,
     required super.apiVersion,
     required String characters,
-  }) : _characters = characters;
+    required String location,
+  })  : _characters = characters,
+        _location = location;
 /* -------------------------------------------------------------------------- */
-  String characters(String eventId) {
-    return buildApiEndpoint('events/$eventId/capture-points/stats/');
-  }
-
   String get charactersList => buildApiEndpoint(_characters);
-
+/* -------------------------------------------------------------------------- */
+  String get location => buildApiEndpoint(_location);
 /* -------------------------------------------------------------------------- */
 }

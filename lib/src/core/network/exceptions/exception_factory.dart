@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:tarkov_mobile/src/core/network/exceptions/network_exceptions.dart';
+import 'package:rick_and_morty/src/core/network/exceptions/network_exceptions.dart';
 
 /// Factory for creating network exceptions from DioException
 class NetworkExceptionFactory {
@@ -127,10 +127,8 @@ class NetworkExceptionFactory {
     if (data == null) return null;
 
     if (data is String) {
-      if (data.contains('<html') ||
-          data.contains('<!DOCTYPE') ||
-          data.contains('<body')) {
-        return null; 
+      if (data.contains('<html') || data.contains('<!DOCTYPE') || data.contains('<body')) {
+        return null;
       }
       if (data.isNotEmpty) return data;
       return null;

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:tarkov_mobile/src/core/network/exceptions/network_exceptions.dart';
-import 'package:tarkov_mobile/src/core/network/utils/error_handler.dart';
+import 'package:rick_and_morty/src/core/network/exceptions/network_exceptions.dart';
+import 'package:rick_and_morty/src/core/network/utils/error_handler.dart';
 
 abstract class BaseDataSource {
   const BaseDataSource();
@@ -19,17 +19,14 @@ abstract class BaseDataSource {
     } on NetworkException {
       rethrow;
     } on Object catch (e, stackTrace) {
-      final networkException =
-          NetworkErrorHandler.handleException(e, stackTrace);
+      final networkException = NetworkErrorHandler.handleException(e, stackTrace);
       NetworkErrorHandler.logError(networkException, context);
       throw networkException;
     }
   }
 
   bool isSuccessfulResponse(Response response) {
-    return response.statusCode != null &&
-        response.statusCode! >= 200 &&
-        response.statusCode! < 300;
+    return response.statusCode != null && response.statusCode! >= 200 && response.statusCode! < 300;
   }
 
   bool isSuccessfulStatusCode(int statusCode) {
@@ -66,8 +63,7 @@ abstract class BaseDataSource {
       context: context,
       request: () async {
         final response = await request();
-        return _validateResponse(
-            response, successStatusCodes, additionalSuccessCodes);
+        return _validateResponse(response, successStatusCodes, additionalSuccessCodes);
       },
     );
   }
