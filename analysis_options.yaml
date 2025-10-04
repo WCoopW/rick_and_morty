@@ -1,5 +1,70 @@
-include: package:sizzle_lints/sizzle_lints.yaml
+# include: package:sizzle_lints/lints.yaml
+
+formatter:
+  page_width: 100
+  trailing_commas: preserve
 
 analyzer:
-  exclude: 
+  exclude:
     - "lib/src/core/localization/generated/**"
+    - "**/*.*.dart"
+    - "**/generated/**"
+
+dart_code_metrics:
+  rules:
+    - avoid-cascade-after-if-null
+    - avoid-collection-methods-with-unrelated-types
+    - avoid-duplicate-named-imports
+    - avoid-dynamic
+    - always-remove-listener
+    - avoid-global-state
+    - avoid-passing-async-when-sync-expected
+    - avoid-redundant-async
+    - avoid-self-compare
+    - avoid-throw-in-catch-block
+    - avoid-unnecessary-conditionals
+    - avoid-unnecessary-type-assertions
+    - avoid-unnecessary-type-casts
+    - avoid-unrelated-type-assertions
+    - avoid-unused-parameters
+    - no-empty-block
+    - no-equal-then-else
+    - prefer-correct-test-file-name
+    - prefer-iterable-of
+    - prefer-match-file-name
+    - avoid-unnecessary-setstate
+    - avoid-unnecessary-stateful-widgets
+    - check-for-equals-in-render-object-setters
+    - consistent-update-render-object
+    - use-setstate-synchronously
+    - avoid-nested-conditional-expressions
+    - avoid-non-null-assertion
+    - avoid-substring
+    - avoid-top-level-members-in-tests
+    - binary-expression-operand-order
+    - double-literal-format
+    - missing-test-assertion
+    - no-boolean-literal-compare
+    - no-magic-number
+    - prefer-async-await
+    - prefer-conditional-expressions
+    - prefer-enums-by-name
+    - prefer-first
+    - prefer-immediate-return
+    - prefer-last
+    - prefer-moving-to-variable
+    - avoid-border-all
+    - avoid-expanded-as-spacer
+    - avoid-returning-widgets
+    - avoid-shrink-wrap-in-lists
+    - avoid-wrapping-in-padding
+    - prefer-const-border-radius
+    - prefer-correct-edge-insets-constructor
+    - prefer-extracting-callbacks
+    - prefer-text-rich
+    - prefer-using-list-view
+    - avoid-duplicate-bloc-event-handlers
+    - avoid-empty-build-when
+    - avoid-existing-instances-in-bloc-provider
+    - avoid-instantiating-in-bloc-value-provider
+    - check-is-not-closed-after-async-gap

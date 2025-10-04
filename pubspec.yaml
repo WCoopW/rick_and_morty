@@ -24,6 +24,8 @@ dependencies:
   # Stream
   stream_transform: ^2.1.0
   rxdart: ^0.28.0
+  json_annotation: ^4.9.0
+  json_serializable: ^6.8.0
 
   # BLoC
   flutter_bloc: ^8.1.6
@@ -50,6 +52,8 @@ dependencies:
   intercepted_client: ^0.0.1
   mockito: ^5.4.4
   clock: ^1.1.1
+  freezed_annotation: ^3.1.0
+  sizzle_lints: ^2.1.7
 
 dev_dependencies:
   # Testing
@@ -57,8 +61,6 @@ dev_dependencies:
     sdk: flutter
 
   # Lints
-  sizzle_lints: ^2.1.0
-
   # Utils
   flutter_gen_runner: ^5.6.0
   flutter_launcher_icons: ^0.13.1
@@ -92,18 +94,3 @@ flutter_launcher_icons:
   min_sdk_android: 21 # android min sdk min:16, default 21
   remove_alpha_ios: true
   background_color_ios: "#ffffff"
-
-  web:
-    generate: true
-    image_path: "assets/images/icon-1024x1024.png"
-    # background_color: "#hexcode"
-    # theme_color: "#hexcode"
-
-  windows:
-    generate: true
-    image_path: "assets/images/icon-1024x1024.png"
-    icon_size: 48 # min:48, max:256, default: 48
-
-  macos:
-    generate: true
-    image_path: "assets/images/icon-1024x1024.png"
