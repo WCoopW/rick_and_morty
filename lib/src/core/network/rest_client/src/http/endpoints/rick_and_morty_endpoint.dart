@@ -6,16 +6,21 @@ class RickAndMortyEndpoint extends Endpoints {
 /* -------------------------------------------------------------------------- */
   final String _location;
 /* -------------------------------------------------------------------------- */
+  final String _paginatedQuery;
+/* -------------------------------------------------------------------------- */
   RickAndMortyEndpoint({
     required super.baseUrl,
     required super.apiVersion,
     required String characters,
     required String location,
+    required String paginatedQuery,
   })  : _characters = characters,
+        _paginatedQuery = paginatedQuery,
         _location = location;
 /* -------------------------------------------------------------------------- */
-  String get charactersList => buildApiEndpoint(_characters);
+  String paginatedCharacters(int page) =>
+      buildApiEndpointWithQuery(_characters, {_paginatedQuery: page});
 /* -------------------------------------------------------------------------- */
-  String get location => buildApiEndpoint(_location);
+  String location(String url) => buildApiEndpoint('$_location/$url');
 /* -------------------------------------------------------------------------- */
 }

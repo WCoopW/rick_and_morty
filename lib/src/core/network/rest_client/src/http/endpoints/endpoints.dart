@@ -56,5 +56,37 @@ abstract class Endpoints {
   String buildApiEndpoint(String endpoint) {
     return buildEndpoint('$apiVersion/$endpoint');
   }
+
+/* -------------------------------------------------------------------------- */
+  String buildApiEndpointWithQuery(String endpoint, Map<String, dynamic>? queryParameters) {
+    final baseEndpoint = buildApiEndpoint(endpoint);
+    if (queryParameters == null || queryParameters.isEmpty) {
+      return baseEndpoint;
+    }
+
+    final queryString = queryParameters.entries
+        .where((entry) => entry.value != null)
+        .map((entry) =>
+            '${Uri.encodeComponent(entry.key)}=${Uri.encodeComponent(entry.value.toString())}')
+        .join('&');
+
+    return queryString.isNotEmpty ? '$baseEndpoint?$queryString' : baseEndpoint;
+  }
+
+/* -------------------------------------------------------------------------- */
+  String buildEndpointWithQuery(String endpoint, Map<String, dynamic>? queryParameters) {
+    final baseEndpoint = buildEndpoint(endpoint);
+    if (queryParameters == null || queryParameters.isEmpty) {
+      return baseEndpoint;
+    }
+
+    final queryString = queryParameters.entries
+        .where((entry) => entry.value != null)
+        .map((entry) =>
+            '${Uri.encodeComponent(entry.key)}=${Uri.encodeComponent(entry.value.toString())}')
+        .join('&');
+
+    return queryString.isNotEmpty ? '$baseEndpoint?$queryString' : baseEndpoint;
+  }
 /* -------------------------------------------------------------------------- */
 }
