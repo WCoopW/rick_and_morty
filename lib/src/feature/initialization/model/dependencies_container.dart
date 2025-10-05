@@ -1,5 +1,6 @@
 import 'package:rick_and_morty/src/feature/initialization/logic/composition_root.dart';
 import 'package:rick_and_morty/src/feature/initialization/logic/error_tracking_manager.dart';
+import 'package:rick_and_morty/src/feature/rick_and_morty/data/local/i_local_characters_repository.dart';
 import 'package:rick_and_morty/src/feature/rick_and_morty/data/remote/i_characters_repository.dart';
 import 'package:rick_and_morty/src/feature/rick_and_morty/data/remote/implementation/characters_repository.dart';
 import 'package:rick_and_morty/src/feature/settings/bloc/app_settings_bloc.dart';
@@ -18,6 +19,7 @@ base class DependenciesContainer {
     required this.appSettingsBloc,
     required this.errorTrackingManager,
     required this.charactersRepository,
+    required this.favoritesRepository,
   });
 
   /// [AppSettingsBloc] instance, used to manage theme and locale.
@@ -28,6 +30,9 @@ base class DependenciesContainer {
 
   /// [ICharactersRepository] instance, used to get characters.
   final CharactersRepository charactersRepository;
+
+  /// [ILocalCharactersRepository] instance, used to get favorites.
+  final ILocalCharactersRepository favoritesRepository;
 }
 
 /// {@template testing_dependencies_container}
