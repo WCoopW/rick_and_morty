@@ -1,5 +1,7 @@
 import 'package:rick_and_morty/src/feature/initialization/logic/composition_root.dart';
 import 'package:rick_and_morty/src/feature/initialization/logic/error_tracking_manager.dart';
+import 'package:rick_and_morty/src/feature/rick_and_morty/data/remote/i_characters_repository.dart';
+import 'package:rick_and_morty/src/feature/rick_and_morty/data/remote/implementation/characters_repository.dart';
 import 'package:rick_and_morty/src/feature/settings/bloc/app_settings_bloc.dart';
 
 /// {@template dependencies_container}
@@ -15,6 +17,7 @@ base class DependenciesContainer {
   const DependenciesContainer({
     required this.appSettingsBloc,
     required this.errorTrackingManager,
+    required this.charactersRepository,
   });
 
   /// [AppSettingsBloc] instance, used to manage theme and locale.
@@ -22,6 +25,9 @@ base class DependenciesContainer {
 
   /// [ErrorTrackingManager] instance, used to report errors.
   final ErrorTrackingManager errorTrackingManager;
+
+  /// [ICharactersRepository] instance, used to get characters.
+  final CharactersRepository charactersRepository;
 }
 
 /// {@template testing_dependencies_container}
