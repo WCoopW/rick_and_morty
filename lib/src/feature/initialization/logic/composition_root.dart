@@ -1,4 +1,6 @@
 import 'package:clock/clock.dart';
+import 'package:dio/dio.dart';
+import 'package:rick_and_morty/src/feature/initialization/logic/factories/characters_repository_factory.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rick_and_morty/src/core/constant/config.dart';
 import 'package:rick_and_morty/src/core/utils/refined_logger.dart';
@@ -79,14 +81,23 @@ class DependenciesFactory extends AsyncFactory<DependenciesContainer> {
 
   @override
   Future<DependenciesContainer> create() async {
-    final sharedPreferences = SharedPreferencesAsync();
+    final dio = Dio(
+      BaseOptions(
+        connectTimeout: Duration(seconds: 15),
+        receiveTimeout: Duration(seconds: 15),
+        sendTimeout: Duration(seconds: 15),
+      ),
+    );
 
+    final sharedPreferences = SharedPreferencesAsync();
     final errorTrackingManager = await ErrorTrackingManagerFactory(config, logger).create();
     final settingsBloc = await SettingsBlocFactory(sharedPreferences).create();
+    final charactersRepository = await CharactersRepositoryFactory(client: dio).create();
 
     return DependenciesContainer(
       appSettingsBloc: settingsBloc,
       errorTrackingManager: errorTrackingManager,
+      charactersRepository: charactersRepository,
     );
   }
 }
@@ -135,10 +146,8 @@ class SettingsBlocFactory extends AsyncFactory<AppSettingsBloc> {
     final appSettingsRepository = AppSettingsRepositoryImpl(
       datasource: AppSettingsDatasourceImpl(sharedPreferences: sharedPreferences),
     );
-
     final appSettings = await appSettingsRepository.getAppSettings();
     final initialState = AppSettingsState.idle(appSettings: appSettings);
-
     return AppSettingsBloc(
       appSettingsRepository: appSettingsRepository,
       initialState: initialState,
