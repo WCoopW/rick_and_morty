@@ -43,7 +43,7 @@ dependencies:
 
   # Logging
   stack_trace: ^1.11.1
-  sentry_flutter: ^8.7.0
+  sentry_flutter: ^9.4.0
 
   # Utils
   platform_info: ^5.0.0
@@ -52,7 +52,7 @@ dependencies:
   intercepted_client: ^0.0.1
   mockito: ^5.4.4
   clock: ^1.1.1
-  freezed_annotation: ^3.1.0
+  freezed_annotation: ^2.4.4
   sizzle_lints: ^2.1.7
   dio: ^5.9.0
 
@@ -69,6 +69,7 @@ dev_dependencies:
 
   # Codegen
   drift_dev: ^2.20.1
+  freezed: ^2.5.7
   build_runner: ^2.4.12
 
 flutter:
