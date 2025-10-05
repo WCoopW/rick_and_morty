@@ -19,4 +19,8 @@ class InfoDTO {
     required this.next,
     required this.prev,
   });
+
+  factory InfoDTO.fromJson(Map<String, dynamic> json) => _$InfoDTOFromJson(json);
+
+  Map<String, dynamic> toJson() => _$InfoDTOToJson(this);
 }
