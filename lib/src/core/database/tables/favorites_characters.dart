@@ -9,5 +9,5 @@ class FavoritesCharacters extends Table {
   TextColumn get type => text().nullable()();
   TextColumn get gender => text().nullable()();
   TextColumn get image => text()();
-  IntColumn get locationId => integer().references(Locations, #id)();
+  TextColumn get locationUrl => text().references(Locations, #url)();
 }

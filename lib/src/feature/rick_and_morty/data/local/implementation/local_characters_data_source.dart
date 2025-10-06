@@ -26,28 +26,43 @@ class LocalCharactersDataSource implements ILocalCharactersDataSource {
             gender: Value(item.gender),
             species: Value(item.species),
             type: Value(item.type),
-            locationId: item.location.id!,
+            locationUrl: item.location.url,
           ),
           mode: InsertMode.insertOrReplace,
         );
   }
 
-  Future<void> _insertLocation(LocationEntity location) async {
-    final existingLocation =
-        await (db.select(locations)..where((tbl) => tbl.id.equals(location.id!))).getSingleOrNull();
+  Future<int> _insertLocation(LocationEntity location) async {
+    final existingLocation = await (db.select(locations)
+          ..where((tbl) => tbl.url.equals(location.url)))
+        .getSingleOrNull();
 
-    if (existingLocation == null) {
-      await db.into(locations).insert(
-            LocationsCompanion(
-              id: Value(location.id!),
-              name: Value(location.name),
-              type: Value(location.type),
-              dimension: Value(location.dimension),
-              url: Value(location.url),
-            ),
-            mode: InsertMode.insertOrReplace,
-          );
+    if (existingLocation != null) {
+      // Check if existing location needs to be updated
+      if (existingLocation.id == null && location.id != null) {
+        // Update existing location with new data
+        await (db.update(locations)..where((tbl) => tbl.url.equals(location.url)))
+            .write(LocationsCompanion(
+          id: Value(location.id),
+          name: Value(location.name),
+          type: Value(location.type),
+          dimension: Value(location.dimension),
+        ));
+      }
+      return existingLocation.id ?? 0;
     }
+
+    // Insert new location with auto-generated ID
+    return await db.into(locations).insert(
+          LocationsCompanion(
+            id: Value(location.id),
+            name: Value(location.name),
+            type: Value(location.type),
+            dimension: Value(location.dimension),
+            url: Value(location.url),
+          ),
+          mode: InsertMode.insertOrReplace,
+        );
   }
 
   @override
@@ -56,20 +71,23 @@ class LocalCharactersDataSource implements ILocalCharactersDataSource {
     final deleted = await (db.delete(favorites)..where((f) => f.id.equals(id))).go();
 
     if (character != null && deleted > 0) {
-      await _deleteUnusedLocation(character.locationId);
+      await _deleteUnusedLocation(character.locationUrl);
     }
 
     return deleted;
   }
 
-  Future<int> _deleteUnusedLocation(int id) async {
-    final isUsed = await (db.select(favorites)..where((tbl) => tbl.locationId.equals(id))).get();
+  Future<int> _deleteUnusedLocation(String locationUrl) async {
+    // Check if this location is still used by any favorites
+    final isUsed =
+        await (db.select(favorites)..where((tbl) => tbl.locationUrl.equals(locationUrl))).get();
 
     if (isUsed.isNotEmpty) {
-      return 0;
+      return 0; // Don't delete if still in use
     }
 
-    final query = db.delete(locations)..where((tbl) => tbl.id.equals(id));
+    // Delete the location
+    final query = db.delete(locations)..where((tbl) => tbl.url.equals(locationUrl));
     return await query.go();
   }
 
@@ -78,8 +96,8 @@ class LocalCharactersDataSource implements ILocalCharactersDataSource {
     final query = db.select(favorites).join([
       innerJoin(
         locations,
-        locations.id.equalsExp(
-          favorites.locationId!,
+        locations.url.equalsExp(
+          favorites.locationUrl,
         ),
       ),
     ]);
