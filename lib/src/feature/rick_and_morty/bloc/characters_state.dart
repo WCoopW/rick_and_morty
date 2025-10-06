@@ -29,6 +29,13 @@ class CharactersState with _$CharactersState {
     @Default('Successful') final String message,
   }) = SuccessfulCharactersState;
 /* -------------------------------------------------------------------------- */
+  /// Successful fetch location
+  const factory CharactersState.successfulAddLocation({
+    required final List<CharacterEntity> characters,
+    required final bool endOfList,
+    @Default('SuccessfulAddLocation') final String message,
+  }) = SuccessfulLocationCharactersState;
+/* -------------------------------------------------------------------------- */
   /// An error has occurred
   const factory CharactersState.error({
     final List<CharacterEntity>? characters,

@@ -19,6 +19,7 @@ class CharactersBloc extends Bloc<CharactersEvent, CharactersState>
     on<CharactersEvent>(
       (event, emit) => event.map(
         fetchCharacters: (event) => _fetchCharacters(event, emit),
+        fetchLocation: (event) => _fetchLocation(event, emit),
       ),
     );
   }
@@ -36,7 +37,8 @@ class CharactersBloc extends Bloc<CharactersEvent, CharactersState>
       final result = await repository.getCharactersByPage(event.page);
 
       // Combine existing characters with new ones
-      final allCharacters = [...currentCharacters, ...result.characters];
+      final allCharacters =
+          event.page == 1 ? result.characters : [...currentCharacters, ...result.characters];
 
       emit(event.successful(
         state: state,
@@ -55,6 +57,48 @@ class CharactersBloc extends Bloc<CharactersEvent, CharactersState>
       final networkException = NetworkErrorHandler.handleException(e, stackTrace);
       NetworkErrorHandler.logError(networkException, 'CharactersBloc._fetchCharacters');
 
+      emit(event.error(
+        state: state,
+        characters: state.characters,
+        message: 'Произошла неожиданная ошибка',
+      ));
+    } finally {
+      event.idle(
+        state: state,
+      );
+    }
+  }
+
+  _fetchLocation(FetchLocationEvent event, Emitter<CharactersState> emit) async {
+    try {
+      emit(event.processing(
+        state: state,
+        characters: state.characters,
+      ));
+      final result = await repository.getLocation(
+        event.character.location.url,
+      );
+      final character = event.character.setLocation(result);
+      final characters = (state.characters ?? <CharacterEntity>[])
+          .map((c) => c.id == character.id ? character : c)
+          .toList();
+
+      emit(event.successfulAddLocation(
+        state: state,
+        characters: characters,
+        message: 'SuccessfulAddLocation',
+      ));
+    } on NetworkException catch (e) {
+      NetworkErrorHandler.logError(e, 'CharactersBloc._fetchLocation');
+      final userMessage = NetworkErrorHandler.getUserFriendlyMessage(e);
+      emit(event.error(
+        state: state,
+        characters: state.characters,
+        message: userMessage,
+      ));
+    } on Object catch (e, stackTrace) {
+      final networkException = NetworkErrorHandler.handleException(e, stackTrace);
+      NetworkErrorHandler.logError(networkException, 'CharactersBloc._fetchLocation');
       emit(event.error(
         state: state,
         characters: state.characters,

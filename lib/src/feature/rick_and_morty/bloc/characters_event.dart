@@ -13,6 +13,11 @@ class CharactersEvent with _$CharactersEvent {
   @With<_ErrorStateEmitter>()
   @With<_IdleStateEmitter>()
   const factory CharactersEvent.fetchCharacters(int page) = FetchCharactersEvent;
+  @With<_ProcessingStateEmitter>()
+  @With<_SuccessfulAddLocationStateEmitter>()
+  @With<_ErrorStateEmitter>()
+  @With<_IdleStateEmitter>()
+  const factory CharactersEvent.fetchLocation(CharacterEntity character) = FetchLocationEvent;
 }
 
 mixin _ProcessingStateEmitter on CharactersEvent {
@@ -36,6 +41,19 @@ mixin _SuccessfulStateEmitter on CharactersEvent {
     final String? message,
   }) =>
       CharactersState.successful(
+        characters: characters,
+        message: message ?? 'Successful',
+        endOfList: state.endOfList,
+      );
+}
+
+mixin _SuccessfulAddLocationStateEmitter on CharactersEvent {
+  CharactersState successfulAddLocation({
+    required final CharactersState state,
+    required final List<CharacterEntity> characters,
+    final String? message,
+  }) =>
+      CharactersState.successfulAddLocation(
         characters: characters,
         message: message ?? 'Successful',
         endOfList: state.endOfList,
