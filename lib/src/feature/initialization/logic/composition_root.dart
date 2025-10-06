@@ -1,6 +1,9 @@
 import 'package:clock/clock.dart';
 import 'package:dio/dio.dart';
+import 'package:rick_and_morty/src/core/database/rick_and_morty_db.dart';
 import 'package:rick_and_morty/src/feature/initialization/logic/factories/characters_repository_factory.dart';
+import 'package:rick_and_morty/src/feature/initialization/logic/factories/favorites_repository_factory.dart';
+import 'package:rick_and_morty/src/feature/rick_and_morty/data/local/implementation/local_characters_data_source.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rick_and_morty/src/core/constant/config.dart';
 import 'package:rick_and_morty/src/core/utils/refined_logger.dart';
@@ -89,15 +92,18 @@ class DependenciesFactory extends AsyncFactory<DependenciesContainer> {
       ),
     );
 
+    final localDb = RickAndMortyDb();
     final sharedPreferences = SharedPreferencesAsync();
     final errorTrackingManager = await ErrorTrackingManagerFactory(config, logger).create();
     final settingsBloc = await SettingsBlocFactory(sharedPreferences).create();
     final charactersRepository = await CharactersRepositoryFactory(client: dio).create();
+    final favoritesRepository = await FavoritesRepositoryFactory(db: localDb).create();
 
     return DependenciesContainer(
       appSettingsBloc: settingsBloc,
       errorTrackingManager: errorTrackingManager,
       charactersRepository: charactersRepository,
+      favoritesRepository: favoritesRepository,
     );
   }
 }
