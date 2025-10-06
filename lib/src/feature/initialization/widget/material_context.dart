@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rick_and_morty/src/core/constant/localization/localization.dart';
-import 'package:rick_and_morty/src/feature/home/widget/home_screen.dart';
 import 'package:rick_and_morty/src/feature/initialization/model/app_theme.dart';
+import 'package:rick_and_morty/src/feature/rick_and_morty/widget/characters_scope.dart';
+import 'package:rick_and_morty/src/feature/rick_and_morty/widget/view/favorites/favorites_scope.dart';
+import 'package:rick_and_morty/src/feature/rick_and_morty/widget/view/navigation_bar_screen.dart';
 import 'package:rick_and_morty/src/feature/settings/widget/settings_scope.dart';
 
 /// {@template material_context}
@@ -16,6 +18,8 @@ class MaterialContext extends StatelessWidget {
   // This global key is needed for [MaterialApp]
   // to work properly when Widgets Inspector is enabled.
   static final _globalKey = GlobalKey();
+  static const double _textScaleMin = 0.5;
+  static const double _textScaleMax = 2.0;
 
   @override
   Widget build(BuildContext context) {
@@ -29,15 +33,21 @@ class MaterialContext extends StatelessWidget {
       locale: settings.locale,
       localizationsDelegates: Localization.localizationDelegates,
       supportedLocales: Localization.supportedLocales,
-      home: const HomeScreen(),
+      home: const NavigationBarScreen(),
       builder: (context, child) => MediaQuery(
         key: _globalKey,
         data: mediaQueryData.copyWith(
           textScaler: TextScaler.linear(
-            mediaQueryData.textScaler.scale(settings.textScale ?? 1).clamp(0.5, 2),
+            mediaQueryData.textScaler
+                .scale(settings.textScale ?? 1)
+                .clamp(_textScaleMin, _textScaleMax),
           ),
         ),
-        child: child!,
+        child: FavoritesScope(
+          child: CharactersScope(
+            child: child ?? const SizedBox.shrink(),
+          ),
+        ),
       ),
     );
   }
