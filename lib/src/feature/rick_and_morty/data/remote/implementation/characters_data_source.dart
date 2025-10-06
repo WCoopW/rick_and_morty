@@ -30,7 +30,7 @@ class CharactersDataSource extends BaseDataSource implements ICharactersDataSour
   Future<LocationDTO> getLocation(String url) {
     return handleGetRequest<LocationDTO>(
       context: 'CharactersDataSource.getLocation',
-      request: () => client.get(endpoint.location(url)),
+      request: () => client.get(url),
       parser: (data) => LocationDTO.fromJson(data),
       successStatusCodes: [200],
     );
